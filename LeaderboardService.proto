@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+import "cloudstate/entity_key.proto";
+import "cloudstate/eventing.proto";
+import "google/api/annotations.proto";
+
+
+package realtime.leaderboard;
+
+// gRPC definition for Realtime Leaderboard Service
+
+
+service RealtimeLeaderboardService { 
+
+
+    rpc AddPlayer (AddPlayerRequest) returns (LeaderboardCount) {}
+    rpc UpdatePlayer (UpdatePlayerRequest) returns (LeaderboardCount) {}
+    
+    rpc CompleteEvent (CompleteEventRequest) returns (Leaderboard) {}
+    rpc GetLeaderboard (GetLeaderboardRequest) returns (Leaderboard) {}
+    rpc GetLeaderboardSorted(GetLeaderboardSortedRequest) returns (Leaderboard) {}
+    
+    
+}
+
+
+message CompleteEventRequest {
+    string leaderboardId = 1 [(.cloudstate.entity_key) = true];
+}
+
+message AddPlayerRequest { 
+    string leaderboardId = 1 [(.cloudstate.entity_key) = true];
+    string playerId =  2; 
+    string playerName = 3;
+    int32 age = 4;
+    int32 score = 5;
+}
+
+message UpdatePlayerRequest {
+    string leaderboardId = 1 [(.cloudstate.entity_key) = true];
+    string playerId = 2;
+    int32 score = 3;
+}
+
+message GetLeaderboardRequest {
+    string leaderboardId = 1 [(.cloudstate.entity_key) = true];
+}
+
+message GetLeaderboardSortedRequest {
+    string leaderboardId = 1 [(.cloudstate.entity_key) = true];
+    string order = 2;
+    int32 limit = 3;
+    //int32 begin = 2;
+    //int32 end = 3;
+}
+
+message LeaderboardCount {
+    int32 count = 1;
+}
+
+message Leaderboard {
+    repeated Player players = 1;
+    bool completedEvent = 2;
+}
+
+message Player {
+    string playerId = 1;
+    string playerName = 2;
+    int32 age = 3;
+    int32 score = 4;
+}
