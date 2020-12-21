@@ -1,0 +1,26 @@
+{
+  "name": "js-leaderboard",
+  "version": "0.0.1",
+  "description": "Simple voting app for Akka Serverless",
+  "main": "index.js",
+  "scripts": {
+    "build": "compile-descriptor ./LeaderboardService.proto",
+    "start": "node index.js",
+    "dockerbuild": "docker build . -t ${DOCKER_USER:-retgits}/realtime-leaderboad:$npm_package_version",
+    "dockerpush": "docker push ${DOCKER_USER:-retgits}/realtime-leaderboad:$npm_package_version",
+    "akkaslsdeploy": "akkasls svc deploy realtime-leaderboad docker.io/${DOCKER_USER:-retgits}/realtime-leaderboad:$npm_package_version",
+    "akkaslsexpose": "akkasls svc expose realtime-leaderboad --enable-cors",
+    "akkaslslocalstart": "docker run -d --name realtime-leaderboad -p 8080:8080 ${DOCKER_USER:-retgits}/realtime-leaderboad:$npm_package_version && docker run -d --name proxy -p 9000:9000 --env USER_FUNCTION_HOST=${CURRENT_IP:-host.docker.internal} cloudstateio/cloudstate-proxy-dev-mode:latest",
+    "akkaslslocalstop": "docker stop realtime-leaderboad && docker rm realtime-leaderboad && docker stop proxy && docker rm proxy"    
+  },
+  "author": "Jeremy Pollock",
+  "license": "Apache License 2.0",
+  "engineStrict": true,
+  "engines": {
+    "node": "~12"
+  },
+  "dependencies": {
+    "cloudstate": "0.0.3",
+    "minimist": ">=0.2.1"
+  }
+}
