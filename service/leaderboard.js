@@ -130,7 +130,9 @@ function getLeaderboard(request, leaderboard) {
  */
 function getLeaderboardSorted(request, leaderboard) {
   // Simply return the shopping leaderboard as is.
-  return {"players": leaderboard.players.sort((a, b) => (a.score < b.score) ? 1 : -1).slice(0, request.limit)};
+  let lb = {"players": leaderboard.players.sort((a, b) => (a.score < b.score) ? 1 : -1).slice(0, request.limit), "totalPlayers": {"count": leaderboard.players.length}};
+  console.log(lb);
+  return lb;
 }
 
 /**
